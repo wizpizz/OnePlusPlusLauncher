@@ -14,10 +14,11 @@ OnePlusPlusLauncher is an Xposed/LSPosed module for the System Launcher on Oxyge
 *   🍑 **Fuzzy Search (Optional):** Replaces the default search logic with a ranked fuzzy search algorithm for more flexible matching.
 *   ⚙️ **Configuration UI:** Allows toggling features (Hide Icon, Fuzzy Search).
 
+## To-Do
+
+*   Rewrite the Configuration UI using Jetpack Compose instead of the current Android Views/XML implementation.
+
 ## Troubleshooting / Known Issues
 
 *   **Compatibility / Launcher Updates:** Launcher updates may break hooks. Class names, field names, or method signatures might change, requiring updates to the module.
 
-## To-Do
-
-*   Rewrite the Configuration UI using Jetpack Compose instead of the current Android Views/XML implementation.
