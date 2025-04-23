@@ -16,7 +16,8 @@ OnePlusPlusLauncher is an Xposed/LSPosed module for the System Launcher on Oxyge
 
 ## To-Do
 
-*   Rewrite the Configuration UI using Jetpack Compose instead of the current Android Views/XML implementation.
+*   Rewrite the module UI using Jetpack Compose instead of the current Android Views/XML implementation.
+*   A decent app icon 
 
 ## Troubleshooting / Known Issues
 
