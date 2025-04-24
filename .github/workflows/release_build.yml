@@ -1,0 +1,63 @@
+name: Android Release Build
+
+on:
+  workflow_dispatch: # Allows manual triggering
+  push:
+    tags:
+      - 'v*.*.*' # Trigger on version tags like v1.0.0
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: gradle
+
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+
+    - name: Decode Keystore
+      id: decode_keystore
+      uses: timheuer/base64-to-file@v1.2
+      with:
+        fileName: 'release.keystore'
+        encodedString: ${{ secrets.SIGNING_KEY_STORE_BASE64 }}
+
+    - name: Build with Gradle
+      env:
+        SIGNING_KEY_STORE_PATH: ${{ steps.decode_keystore.outputs.filePath }}
+        SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+        SIGNING_KEY_STORE_PASSWORD: ${{ secrets.SIGNING_KEY_STORE_PASSWORD }}
+        SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
+      run: ./gradlew assembleRelease
+
+    - name: Upload Release APK Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: app-release-apk
+        path: app/build/outputs/apk/release/app-release-unsigned.apk # Gradle outputs unsigned first, then signs
+        # Adjust path if your signed APK has a different name/location, e.g., app-release-signed.apk
+        # The signed apk is usually app/build/outputs/apk/release/app-release.apk 
+        # But check your specific build output. Let's assume the standard for now:
+        # path: app/build/outputs/apk/release/app-release.apk
+        if-no-files-found: error
+
+    # Optional: Upload to GitHub Release (if triggered by tag)
+    - name: Upload Release Asset
+      if: startsWith(github.ref, 'refs/tags/')
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ github.event.release.upload_url }} # Requires creating a release first
+        asset_path: app/build/outputs/apk/release/app-release.apk # Adjust path if needed
+        asset_name: OnePlusPlusLauncher-${{ github.ref_name }}.apk
+        asset_content_type: application/vnd.android.package-archive 
