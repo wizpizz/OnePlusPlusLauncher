@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = property.project.app.packageName
-    compileSdk = 35
+    compileSdk = property.project.android.compileSdk
 
     defaultConfig {
         applicationId = property.project.app.packageName
@@ -47,7 +47,6 @@ android {
             signingConfig = signingConfigs.getByName("release")
         }
     }
-
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
