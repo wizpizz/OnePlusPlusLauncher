@@ -50,21 +50,18 @@ jobs:
         if-no-files-found: error
 
     # Optional: Upload to GitHub Release (if triggered by tag)
-    - name: Create Release
-      id: create_release
+    - name: Create GitHub Release
       if: startsWith(github.ref, 'refs/tags/')
-      uses: actions/create-release@v1
+      uses: ncipollo/release-action@v1
       with:
-        tag_name: ${{ github.ref_name }}
-        release_name: Release ${{ github.ref_name }}
+        # Use the tag name from the Git ref
+        tag: ${{ github.ref_name }}
+        # Use the tag name for the release name
+        name: Release ${{ github.ref_name }}
+        # Path to the artifact to upload
+        artifacts: app/build/outputs/apk/release/app-release.apk
+        # The action defaults to using github.token, which is fine with permissions set
+        # token: ${{ secrets.GITHUB_TOKEN }} 
+        # Mark as a production release (not draft or prerelease)
         draft: false
-        prerelease: false
-
-    - name: Upload Release Asset
-      if: startsWith(github.ref, 'refs/tags/')
-      uses: actions/upload-release-asset@v1
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }} # Use output from the 'Create Release' step
-        asset_path: app/build/outputs/apk/release/app-release.apk # Adjust path if needed
-        asset_name: OnePlusPlusLauncher-${{ github.ref_name }}.apk
-        asset_content_type: application/vnd.android.package-archive 
+        prerelease: false 
