@@ -51,13 +51,25 @@ jobs:
         if-no-files-found: error
 
     # Optional: Upload to GitHub Release (if triggered by tag)
+    - name: Create Release
+      id: create_release
+      if: startsWith(github.ref, 'refs/tags/')
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref_name }}
+        release_name: Release ${{ github.ref_name }}
+        draft: false
+        prerelease: false
+
     - name: Upload Release Asset
       if: startsWith(github.ref, 'refs/tags/')
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: ${{ github.event.release.upload_url }} # Requires creating a release first
+        upload_url: ${{ steps.create_release.outputs.upload_url }} # Use output from the 'Create Release' step
         asset_path: app/build/outputs/apk/release/app-release.apk # Adjust path if needed
         asset_name: OnePlusPlusLauncher-${{ github.ref_name }}.apk
         asset_content_type: application/vnd.android.package-archive 
