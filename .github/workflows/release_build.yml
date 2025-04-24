@@ -43,11 +43,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: app-release-apk
-        path: app/build/outputs/apk/release/app-release-unsigned.apk # Gradle outputs unsigned first, then signs
-        # Adjust path if your signed APK has a different name/location, e.g., app-release-signed.apk
-        # The signed apk is usually app/build/outputs/apk/release/app-release.apk 
-        # But check your specific build output. Let's assume the standard for now:
-        # path: app/build/outputs/apk/release/app-release.apk
+        path: app/build/outputs/apk/release/app-release.apk
         if-no-files-found: error
 
     # Optional: Upload to GitHub Release (if triggered by tag)
