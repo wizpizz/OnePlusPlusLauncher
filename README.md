@@ -6,6 +6,8 @@ OnePlusPlusLauncher is an Xposed/LSPosed module for the System Launcher on Oxyge
 
 - tested on System Launcher 15.4.13 / OxygenOS 15
 
+**Please star the repository, if you enjoy using the module! It goes a long way ⭐**
+
 ## Features
 
 *   ⌨️ **Automatic Keyboard / Searchbar Focus:** Automatically displays the keyboard when the app drawer is opened and search is focused.
