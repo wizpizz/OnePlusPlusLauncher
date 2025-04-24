@@ -1,4 +1,10 @@
 # <center>OnePlusPlusLauncher Xposed Module</center>
+![GitHub Release](https://img.shields.io/github/v/release/wizpizz/OnePlusPlusLauncher?style=for-the-badge)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/wizpizz/OnePlusPlusLauncher/debug_build.yml?style=for-the-badge&label=DEBUG%20BUILD)
+![GitHub License](https://img.shields.io/github/license/wizpizz/OnePlusPlusLauncher?style=for-the-badge)
+![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/wizpizz/OnePlusPlusLauncher/total?style=for-the-badge)
+![GitHub Repo stars](https://img.shields.io/github/stars/wizpizz/OnePlusPlusLauncher?style=for-the-badge)
+
 
 ## Overview
 
