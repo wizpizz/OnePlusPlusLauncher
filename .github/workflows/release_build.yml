@@ -9,6 +9,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # Grant permissions for creating releases and uploading assets
+    permissions:
+      contents: write
 
     steps:
     - name: Checkout code
