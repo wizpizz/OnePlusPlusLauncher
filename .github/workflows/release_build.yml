@@ -50,6 +50,24 @@ jobs:
         if-no-files-found: error
 
     # Optional: Upload to GitHub Release (if triggered by tag)
+    - name: Fetch tag annotation
+      if: startsWith(github.ref, 'refs/tags/')
+      id: tag_data
+      run: |
+        # Fetch tags to ensure we have tag objects
+        git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+        
+        # Extract tag annotation message
+        TAG_MESSAGE=$(git tag -l --format='%(contents)' ${{ github.ref_name }})
+        
+        # Output the tag message for use in releases
+        {
+          echo 'annotation<<EOF'
+          echo "$TAG_MESSAGE"
+          echo 'EOF'
+        } >> $GITHUB_OUTPUT
+
+    # Replaced actions/create-release and actions/upload-release-asset
     - name: Create GitHub Release
       if: startsWith(github.ref, 'refs/tags/')
       uses: ncipollo/release-action@v1
@@ -59,7 +77,7 @@ jobs:
         # Use the tag name for the release name
         name: Release ${{ github.ref_name }}
         # Use the tag annotation message as the release body
-        body: ${{ github.event.head_commit.message }}
+        body: ${{ steps.tag_data.outputs.annotation }}
         # Path to the artifact to upload
         artifacts: app/build/outputs/apk/release/app-release.apk
         # The action defaults to using github.token, which is fine with permissions set
@@ -80,14 +98,6 @@ jobs:
         echo "version_name=$VERSION_NAME" >> $GITHUB_OUTPUT
         echo "xposed_tag=${VERSION_CODE}-${VERSION_NAME}" >> $GITHUB_OUTPUT
 
-    - name: Checkout Xposed-Modules-Repo
-      if: startsWith(github.ref, 'refs/tags/')
-      uses: actions/checkout@v4
-      with:
-        repository: Xposed-Modules-Repo/com.wizpizz.onepluspluslauncher
-        token: ${{ secrets.XPOSED_REPO_TOKEN }}
-        path: xposed-repo
-
     - name: Create release on Xposed-Modules-Repo
       if: startsWith(github.ref, 'refs/tags/')
       uses: ncipollo/release-action@v1
@@ -95,8 +105,8 @@ jobs:
         # Use the Xposed tag format: versionCode-versionName
         tag: ${{ steps.version_info.outputs.xposed_tag }}
         name: Release ${{ steps.version_info.outputs.xposed_tag }}
-        # Use the same release body as the main repo
-        body: ${{ github.event.head_commit.message }}
+        # Use the same tag annotation as the main repo
+        body: ${{ steps.tag_data.outputs.annotation }}
         # Upload the same APK artifact
         artifacts: app/build/outputs/apk/release/app-release.apk
         # Target the Xposed repository

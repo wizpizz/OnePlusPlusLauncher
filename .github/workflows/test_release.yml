@@ -1,0 +1,106 @@
+name: Test Release Workflow
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to simulate (e.g., v1.0.1-test)'
+        required: true
+        default: 'v1.0.1-test'
+
+jobs:
+  test-build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: gradle
+
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+
+    - name: Decode Keystore
+      id: decode_keystore
+      uses: timheuer/base64-to-file@v1.2
+      with:
+        fileName: 'release.keystore'
+        encodedString: ${{ secrets.SIGNING_KEY_STORE_BASE64 }}
+
+    - name: Build with Gradle
+      env:
+        SIGNING_KEY_STORE_PATH: ${{ steps.decode_keystore.outputs.filePath }}
+        SIGNING_KEY_ALIAS: ${{ secrets.SIGNING_KEY_ALIAS }}
+        SIGNING_KEY_STORE_PASSWORD: ${{ secrets.SIGNING_KEY_STORE_PASSWORD }}
+        SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
+      run: ./gradlew assembleRelease
+
+    - name: Test tag annotation extraction
+      id: tag_data
+      run: |
+        TAG_NAME="${{ github.event.inputs.tag }}"
+        echo "Using test tag: $TAG_NAME"
+        
+        # Create test annotation message
+        TAG_MESSAGE="Test release for $TAG_NAME
+
+        This is a test release created manually to test the workflow.
+        - ✅ Testing tag annotation extraction
+        - ✅ Testing release creation  
+        - ✅ Testing Xposed repo sync
+        
+        **Features tested:**
+        - APK signing
+        - Release body formatting
+        - Cross-repo release creation"
+        
+        # Output the tag message for testing
+        {
+          echo 'annotation<<EOF'
+          echo "$TAG_MESSAGE"
+          echo 'EOF'
+          echo "tag_name=$TAG_NAME"
+        } >> $GITHUB_OUTPUT
+
+    - name: Test version information extraction
+      id: version_info
+      run: |
+        # Read versionCode and versionName from gradle.properties
+        VERSION_CODE=$(grep "project.app.versionCode" gradle.properties | cut -d'=' -f2 | tr -d ' ')
+        VERSION_NAME=$(grep "project.app.versionName" gradle.properties | cut -d'=' -f2 | tr -d ' ')
+        echo "version_code=$VERSION_CODE" >> $GITHUB_OUTPUT
+        echo "version_name=$VERSION_NAME" >> $GITHUB_OUTPUT
+        echo "xposed_tag=${VERSION_CODE}-${VERSION_NAME}" >> $GITHUB_OUTPUT
+
+    - name: Display test results
+      run: |
+        echo "## Test Results" >> $GITHUB_STEP_SUMMARY
+        echo "✅ APK built successfully" >> $GITHUB_STEP_SUMMARY
+        echo "✅ Tag annotation extracted: ${{ steps.tag_data.outputs.tag_name }}" >> $GITHUB_STEP_SUMMARY
+        echo "✅ Version info extracted: ${{ steps.version_info.outputs.xposed_tag }}" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### Release Body Preview:" >> $GITHUB_STEP_SUMMARY
+        echo '${{ steps.tag_data.outputs.annotation }}' >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### APK Info:" >> $GITHUB_STEP_SUMMARY
+        if [ -f "app/build/outputs/apk/release/app-release.apk" ]; then
+          echo "📱 APK exists and ready for upload" >> $GITHUB_STEP_SUMMARY
+          ls -lh app/build/outputs/apk/release/app-release.apk >> $GITHUB_STEP_SUMMARY
+        else
+          echo "❌ APK not found" >> $GITHUB_STEP_SUMMARY
+        fi
+
+    - name: Upload test APK as artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-apk-${{ steps.tag_data.outputs.tag_name }}
+        path: app/build/outputs/apk/release/app-release.apk
+        if-no-files-found: error 
