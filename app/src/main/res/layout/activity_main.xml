@@ -114,16 +114,6 @@
             </LinearLayout>
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:alpha="0.8"
-                android:ellipsize="end"
-                android:singleLine="true"
-                android:text="- Your custom text here -"
-                android:textColor="@color/white"
-                android:textSize="13sp" />
-
-            <TextView
                 android:id="@+id/main_text_api_way"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -137,6 +127,8 @@
         </LinearLayout>
     </LinearLayout>
 
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -149,12 +141,14 @@
         android:orientation="vertical"
         android:paddingLeft="15dp"
         android:paddingTop="15dp"
-        android:paddingRight="15dp">
+        android:paddingRight="15dp"
+        android:paddingBottom="10dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center|start">
+            android:gravity="center|start"
+            android:layout_marginBottom="8dp">
 
             <ImageView
                 android:layout_width="15dp"
@@ -167,50 +161,174 @@
                 android:layout_height="wrap_content"
                 android:alpha="0.85"
                 android:singleLine="true"
-                android:text="@string/display_settings"
+                android:text="@string/feature_settings"
                 android:textColor="@color/colorTextGray"
                 android:textSize="12sp" />
         </LinearLayout>
 
-        <com.wizpizz.onepluspluslauncher.ui.view.MaterialSwitch
-            android:id="@+id/hide_icon_in_launcher_switch"
+        <!-- Search Enhancement Category -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/hide_icon_in_launcher_title" 
+            android:gravity="center|start"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="5dp">
+
+            <ImageView
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_marginEnd="8dp"
+                android:src="@mipmap/ic_home"
+                android:alpha="0.6" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:alpha="0.7"
+                android:singleLine="true"
+                android:text="@string/category_search_enhancement"
+                android:textColor="@color/colorTextGray"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <com.wizpizz.onepluspluslauncher.ui.view.MaterialSwitch
+            android:id="@+id/fuzzy_search_switch_new"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/pref_fuzzy_search_title"
             android:textAllCaps="false"
             android:textColor="@color/colorTextGray"
             android:textSize="15sp" />
 
         <com.wizpizz.onepluspluslauncher.ui.view.MaterialSwitch
-            android:id="@+id/fuzzy_search_switch" 
+            android:id="@+id/enter_key_launch_switch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp" 
-            android:text="@string/pref_fuzzy_search_title" 
+            android:layout_marginTop="8dp"
+            android:text="@string/pref_enter_key_launch_title"
             android:textAllCaps="false"
             android:textColor="@color/colorTextGray"
             android:textSize="15sp" />
 
-        <TextView
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="4dp"
+            android:background="@color/colorTextGray"
+            android:alpha="0.2" />
+
+        <!-- Auto Focus Category -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center|start"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="5dp">
+
+            <ImageView
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_marginEnd="8dp"
+                android:src="@mipmap/ic_home"
+                android:alpha="0.6" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:alpha="0.7"
+                android:singleLine="true"
+                android:text="@string/category_auto_focus"
+                android:textColor="@color/colorTextGray"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <com.wizpizz.onepluspluslauncher.ui.view.MaterialSwitch
+            android:id="@+id/auto_focus_search_swipe_switch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/pref_auto_focus_search_swipe_title"
+            android:textAllCaps="false"
+            android:textColor="@color/colorTextGray"
+            android:textSize="15sp" />
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="4dp"
+            android:background="@color/colorTextGray"
+            android:alpha="0.2" />
+
+        <!-- Search Redirect Category -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center|start"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="5dp">
+
+            <ImageView
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_marginEnd="8dp"
+                android:src="@mipmap/ic_home"
+                android:alpha="0.6" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:alpha="0.7"
+                android:singleLine="true"
+                android:text="@string/category_search_redirect"
+                android:textColor="@color/colorTextGray"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <com.wizpizz.onepluspluslauncher.ui.view.MaterialSwitch
+            android:id="@+id/global_search_redirect_switch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/pref_global_search_redirect_title"
+            android:textAllCaps="false"
+            android:textColor="@color/colorTextGray"
+            android:textSize="15sp" />
+
+        <com.wizpizz.onepluspluslauncher.ui.view.MaterialSwitch
+            android:id="@+id/auto_focus_search_redirect_switch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/pref_auto_focus_search_redirect_title"
+            android:textAllCaps="false"
+            android:textColor="@color/colorTextGray"
+            android:textSize="15sp" />
+
+        <com.wizpizz.onepluspluslauncher.ui.view.MaterialSwitch
+            android:id="@+id/swipe_down_search_redirect_switch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/pref_swipe_down_search_redirect_title"
+            android:textAllCaps="false"
+            android:textColor="@color/colorTextGray"
+            android:textSize="15sp" />
+
+        <com.wizpizz.onepluspluslauncher.ui.view.MaterialSwitch
+            android:id="@+id/auto_focus_swipe_down_redirect_switch" 
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp" 
-            android:layout_marginBottom="10dp"
-            android:alpha="0.6"
-            android:lineSpacingExtra="6dp"
-            android:text="@string/hide_app_icon_on_launcher_tip"
-            android:textColor="@color/colorTextDark"
-            android:textSize="12sp" />
+            android:text="@string/pref_auto_focus_swipe_down_redirect_title" 
+            android:textAllCaps="false"
+            android:textColor="@color/colorTextGray"
+            android:textSize="15sp" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:alpha="0.6"
-            android:lineSpacingExtra="6dp"
-            android:text="@string/hide_app_icon_on_launcher_notice"
-            android:textColor="#FF5722"
-            android:textSize="12sp" />
     </LinearLayout>
 
     <androidx.core.widget.NestedScrollView

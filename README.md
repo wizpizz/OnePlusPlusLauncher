@@ -8,20 +8,20 @@
 
 ## Overview
 
-OnePlusPlusLauncher is an Xposed/LSPosed module for the System Launcher on OxygenOS 15 that hooks into the application using the [YukiHookAPI](https://github.com/HighCapable/YuKiHookAPI) framework. It modifies app drawer search functions: automating keyboard display, enabling instant app launch from search, redirecting the global search button to the app drawer, and providing optional fuzzy search.
+OnePlusPlusLauncher is an Xposed/LSPosed module for the System Launcher on OxygenOS 15 that hooks into the application using the [YukiHookAPI](https://github.com/HighCapable/YuKiHookAPI) framework. It modifies app drawer search functions: automating keyboard display, enabling instant app launch from search, redirecting search actions to the app drawer, and providing optional fuzzy search.
 
-- tested on System Launcher 15.4.13 / OxygenOS 15
-- **App Launch on Enter broken on System Launcher >= v15.6.13**. Will be fixed in the next update.
+- tested on System Launcher 15.4.13, 15.6.13 / OxygenOS 15 (should theoretically work on ColorOS as well)
 
 **Please star the repository, if you enjoy using the module! It goes a long way ⭐**
 
 ## Features
 
-*   ⌨️ **Automatic Keyboard / Searchbar Focus:** Automatically displays the keyboard when the app drawer is opened and search is focused.
+*   ⌨️ **Automatic Keyboard / Searchbar Focus:** Automatically displays the keyboard when the app drawer is opened and search is focused. Can be toggled separately for opening app drawer by swiping up or redirecting from the Global Search Button.
 *   ↩️ **App Launch on Enter:** Launches the first search result directly when the "Enter" key or search action button on the keyboard is pressed.
-*   🔎 **Global Search Button Redirect:** Intercepts the search button in the homescreeen that would normally open the dedicated global search app, redirecting to the main app drawer instead.
-*   🍑 **Fuzzy Search (Optional):** Replaces the default search logic with a ranked fuzzy search algorithm for more flexible matching.
-*   ⚙️ **Configuration UI:** Allows toggling features (Hide Icon, Fuzzy Search).
+*   🔎 **Global Search Button Redirect:** Intercepts the search button in the homescreen that would normally open the dedicated global search app, redirecting to the main app drawer instead.
+*   📱 **Swipe Down Search Redirect:** Intercepts swipe down search gestures and redirects them to the app drawer instead of the default search interface. Includes optional auto focus for seamless search experience.
+*   🍑 **Fuzzy Search:** Replaces the default search logic with a ranked fuzzy search algorithm for more flexible matching.
+*   ⚙️ **Configuration UI:** Allows toggling features individually, including auto focus options for different interaction methods.
 
 ## To-Do
 

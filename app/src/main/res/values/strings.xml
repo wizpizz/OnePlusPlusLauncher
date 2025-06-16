@@ -1,14 +1,20 @@
 <resources>
     <string name="app_name">OnePlusPlusLauncher</string>
-    <string name="xposed_desc">Automatically focuses the app drawer search bar and brings up the keyboard when opened in the OnePlus Launcher</string>
+    <string name="xposed_desc">Enhanced OnePlus Launcher with auto focus search, enter key app launching, global search redirect, and fuzzy search features</string>
     <string name="about_module">This module is made by YukiHookAPI. \nLearn more https://github.com/HighCapable/YuKiHookAPI</string>
     <string name="module_version">Module Version: %s</string>
     <string name="module_not_activated">Not Activated</string>
     <string name="module_is_activated">Activated</string>
-    <string name="display_settings">Display settings</string>
-    <string name="hide_app_icon_on_launcher">Hide app icons on launcher</string>
-    <string name="hide_app_icon_on_launcher_tip">After hiding the app icon, the interface may be closed and will no longer be displayed on the launcher. You can find and open the module settings in EdXposed or LSPosed.</string>
-    <string name="hide_app_icon_on_launcher_notice">Note: Be sure to turn off the \"Force apps to show launcher icons\" feature in LSPosed</string>
-    <string name="hide_icon_in_launcher_title">Hide Icon in Launcher</string>
-    <string name="pref_fuzzy_search_title">Use Fuzzy Search</string>
+
+    <string name="pref_fuzzy_search_title">Use Fuzzy Search Algorithm</string>
+    <string name="pref_auto_focus_search_swipe_title">Auto Focus on Swipe Up</string>
+    <string name="pref_auto_focus_search_redirect_title">Auto Focus on Search Button Redirect</string>
+    <string name="pref_auto_focus_swipe_down_redirect_title">Auto Focus on Swipe Down Redirect</string>
+    <string name="pref_enter_key_launch_title">Launch App on Enter</string>
+    <string name="pref_global_search_redirect_title">Redirect Global Search Button</string>
+    <string name="pref_swipe_down_search_redirect_title">Redirect Swipe Down Search</string>
+    <string name="feature_settings">Feature settings</string>
+    <string name="category_search_enhancement">Search Enhancement</string>
+    <string name="category_auto_focus">Auto Focus (Show Keyboard)</string>
+    <string name="category_search_redirect">Search Redirect</string>
 </resources>
