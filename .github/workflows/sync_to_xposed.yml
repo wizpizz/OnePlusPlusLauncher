@@ -67,16 +67,16 @@ jobs:
     - name: Download APK
       run: |
         echo "Downloading APK from: ${{ steps.release_info.outputs.apk_download_url }}"
-        curl -L -o "downloaded-apk.apk" "${{ steps.release_info.outputs.apk_download_url }}"
+        curl -L -o "${{ steps.release_info.outputs.apk_name }}" "${{ steps.release_info.outputs.apk_download_url }}"
         
         # Verify download
-        if [ ! -f "downloaded-apk.apk" ]; then
+        if [ ! -f "${{ steps.release_info.outputs.apk_name }}" ]; then
           echo "❌ Failed to download APK"
           exit 1
         fi
         
-        echo "✅ APK downloaded successfully"
-        ls -lh downloaded-apk.apk
+        echo "✅ APK downloaded successfully as: ${{ steps.release_info.outputs.apk_name }}"
+        ls -lh "${{ steps.release_info.outputs.apk_name }}"
 
     - name: Read version information for Xposed tag
       id: version_info
@@ -97,63 +97,41 @@ jobs:
         echo "version_name=$VERSION_NAME" >> $GITHUB_OUTPUT
         echo "xposed_tag=$XPOSED_TAG" >> $GITHUB_OUTPUT
 
-    - name: Create release on Xposed-Modules-Repo
-      uses: ncipollo/release-action@v1
-      with:
-        # Use the Xposed tag format: versionCode-versionName
-        tag: ${{ steps.version_info.outputs.xposed_tag }}
-        name: Release ${{ steps.version_info.outputs.xposed_tag }}
-        # Use the same release body as the main repo
-        body: |
-          **Synced from main repo release: ${{ steps.release_info.outputs.tag_name }}**
-          
-          ${{ steps.release_info.outputs.release_body }}
-        # Upload the downloaded APK
-        artifacts: downloaded-apk.apk
-        # Target the Xposed repository
-        repo: Xposed-Modules-Repo/com.wizpizz.onepluspluslauncher
-        token: ${{ secrets.XPOSED_REPO_TOKEN }}
-        draft: false
-        prerelease: false
-        # Allow updating if release already exists
-        allowUpdates: true
-
-    - name: Debug token access (if release fails)
-      if: failure()
+    - name: Create release body file
       run: |
-        echo "🔍 Debugging token access..."
+        cat > release_body.md << 'EOF'
+        **Synced from main repo release: ${{ steps.release_info.outputs.tag_name }}**
         
-        # Test if token can access the repository
-        REPO_CHECK=$(curl -s -H "Authorization: token ${{ secrets.XPOSED_REPO_TOKEN }}" \
-          "https://api.github.com/repos/Xposed-Modules-Repo/com.wizpizz.onepluspluslauncher")
+        ${{ steps.release_info.outputs.release_body }}
+        EOF
+
+    - name: Create release on Xposed repo using GitHub CLI
+      env:
+        GH_TOKEN: ${{ secrets.XPOSED_REPO_TOKEN }}
+      run: |
+        echo "Creating release on Xposed repository..."
         
-        if echo "$REPO_CHECK" | grep -q '"message".*"Not Found"'; then
-          echo "❌ Token cannot access repository Xposed-Modules-Repo/com.wizpizz.onepluspluslauncher"
-          echo "Check if:"
-          echo "1. Repository path is correct"
-          echo "2. Token has access to this repository"
-          echo "3. Repository is not private (unless token has private repo access)"
-        else
-          echo "✅ Token can access repository"
-          echo "Repository info:"
-          echo "$REPO_CHECK" | jq '.full_name, .private, .permissions'
-        fi
-        
-        # Test token permissions
-        echo ""
-        echo "🔑 Testing token permissions..."
-        curl -s -H "Authorization: token ${{ secrets.XPOSED_REPO_TOKEN }}" \
-          "https://api.github.com/user" | jq '.login, .type'
+        # Create release using GitHub CLI
+        gh release create "${{ steps.version_info.outputs.xposed_tag }}" \
+          --repo "Xposed-Modules-Repo/com.wizpizz.onepluspluslauncher" \
+          --title "Release ${{ steps.version_info.outputs.xposed_tag }}" \
+          --notes-file "release_body.md" \
+          "${{ steps.release_info.outputs.apk_name }}" || \
+        # If release exists, upload to existing release
+        gh release upload "${{ steps.version_info.outputs.xposed_tag }}" \
+          --repo "Xposed-Modules-Repo/com.wizpizz.onepluspluslauncher" \
+          --clobber \
+          "${{ steps.release_info.outputs.apk_name }}"
 
     - name: Cleanup
       run: |
-        # Clean up downloaded APK
-        rm -f downloaded-apk.apk
+        # Clean up files
+        rm -f "${{ steps.release_info.outputs.apk_name }}" release_body.md
         
     - name: Summary
       run: |
         echo "## Sync Results" >> $GITHUB_STEP_SUMMARY
-        echo "✅ **Successfully synced release to Xposed repo**" >> $GITHUB_STEP_SUMMARY
+        echo "✅ **Successfully synced release to Xposed repo using GitHub CLI**" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "**Main repo:** ${{ steps.release_info.outputs.tag_name }}" >> $GITHUB_STEP_SUMMARY
         echo "**Xposed repo:** ${{ steps.version_info.outputs.xposed_tag }}" >> $GITHUB_STEP_SUMMARY

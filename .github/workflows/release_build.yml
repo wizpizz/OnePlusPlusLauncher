@@ -100,17 +100,31 @@ jobs:
 
     - name: Create release on Xposed-Modules-Repo
       if: startsWith(github.ref, 'refs/tags/')
-      uses: ncipollo/release-action@v1
-      with:
-        # Use the Xposed tag format: versionCode-versionName
-        tag: ${{ steps.version_info.outputs.xposed_tag }}
-        name: Release ${{ steps.version_info.outputs.xposed_tag }}
-        # Use the same tag annotation as the main repo
-        body: ${{ steps.tag_data.outputs.annotation }}
-        # Upload the same APK artifact
-        artifacts: app/build/outputs/apk/release/app-release.apk
-        # Target the Xposed repository
-        repo: Xposed-Modules-Repo/com.wizpizz.onepluspluslauncher
-        token: ${{ secrets.XPOSED_REPO_TOKEN }}
-        draft: false
-        prerelease: false 
+      env:
+        GH_TOKEN: ${{ secrets.XPOSED_REPO_TOKEN }}
+      run: |
+        echo "Creating release on Xposed repository using GitHub CLI..."
+        
+        # Create release body file
+        cat > release_body.md << 'EOF'
+        **Synced from main repo release: ${{ github.ref_name }}**
+        
+        ${{ steps.tag_data.outputs.annotation }}
+        EOF
+        
+        # Create release using GitHub CLI
+        gh release create "${{ steps.version_info.outputs.xposed_tag }}" \
+          --repo "Xposed-Modules-Repo/com.wizpizz.onepluspluslauncher" \
+          --title "Release ${{ steps.version_info.outputs.xposed_tag }}" \
+          --notes-file "release_body.md" \
+          "app/build/outputs/apk/release/app-release.apk" || \
+        # If release exists, upload to existing release
+        gh release upload "${{ steps.version_info.outputs.xposed_tag }}" \
+          --repo "Xposed-Modules-Repo/com.wizpizz.onepluspluslauncher" \
+          --clobber \
+          "app/build/outputs/apk/release/app-release.apk"
+        
+        # Clean up
+        rm -f release_body.md
+        
+        echo "✅ Successfully created/updated release on Xposed repo: ${{ steps.version_info.outputs.xposed_tag }}" 

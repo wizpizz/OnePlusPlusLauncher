@@ -1,6 +1,7 @@
 name: Sync README to Xposed Repo
 
 on:
+  workflow_dispatch: # Manual trigger
   push:
     branches: [ "main" ]
     paths:
@@ -41,4 +42,20 @@ jobs:
           git commit -m "Sync README from main repo"
           git push
           echo "README synced successfully"
-        fi 
+        fi
+
+    - name: Summary
+      run: |
+        TRIGGER_TYPE="${{ github.event_name }}"
+        echo "## README Sync Results" >> $GITHUB_STEP_SUMMARY
+        
+        if [ "$TRIGGER_TYPE" = "workflow_dispatch" ]; then
+          echo "🔧 **Manually triggered README sync**" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "🔄 **Automatic README sync** (triggered by README.md change)" >> $GITHUB_STEP_SUMMARY
+        fi
+        
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "✅ README synchronized to Xposed repository" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "[View Xposed Repository](https://github.com/Xposed-Modules-Repo/com.wizpizz.onepluspluslauncher)" >> $GITHUB_STEP_SUMMARY 
