@@ -1,0 +1,136 @@
+name: Sync Release to Xposed Repo
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: 'Release tag to sync (leave empty for latest)'
+        required: false
+        default: ''
+
+jobs:
+  sync-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Get release information
+      id: release_info
+      run: |
+        # If no tag specified, get the latest release
+        if [ -z "${{ github.event.inputs.release_tag }}" ]; then
+          echo "Fetching latest release..."
+          RELEASE_DATA=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/repos/${{ github.repository }}/releases/latest")
+        else
+          echo "Fetching release for tag: ${{ github.event.inputs.release_tag }}"
+          RELEASE_DATA=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/repos/${{ github.repository }}/releases/tags/${{ github.event.inputs.release_tag }}")
+        fi
+        
+        # Extract release information
+        TAG_NAME=$(echo "$RELEASE_DATA" | jq -r '.tag_name')
+        RELEASE_NAME=$(echo "$RELEASE_DATA" | jq -r '.name')
+        RELEASE_BODY=$(echo "$RELEASE_DATA" | jq -r '.body')
+        APK_DOWNLOAD_URL=$(echo "$RELEASE_DATA" | jq -r '.assets[] | select(.name | endswith(".apk")) | .browser_download_url')
+        APK_NAME=$(echo "$RELEASE_DATA" | jq -r '.assets[] | select(.name | endswith(".apk")) | .name')
+        
+        # Validate we got the data
+        if [ "$TAG_NAME" = "null" ] || [ -z "$TAG_NAME" ]; then
+          echo "❌ Could not find release. Check if the tag exists."
+          exit 1
+        fi
+        
+        if [ "$APK_DOWNLOAD_URL" = "null" ] || [ -z "$APK_DOWNLOAD_URL" ]; then
+          echo "❌ Could not find APK asset in release."
+          exit 1
+        fi
+        
+        echo "✅ Found release: $TAG_NAME"
+        echo "✅ APK URL: $APK_DOWNLOAD_URL"
+        
+        # Output for next steps
+        {
+          echo "tag_name=$TAG_NAME"
+          echo "release_name=$RELEASE_NAME"
+          echo "apk_download_url=$APK_DOWNLOAD_URL"
+          echo "apk_name=$APK_NAME"
+          echo 'release_body<<EOF'
+          echo "$RELEASE_BODY"
+          echo 'EOF'
+        } >> $GITHUB_OUTPUT
+
+    - name: Download APK
+      run: |
+        echo "Downloading APK from: ${{ steps.release_info.outputs.apk_download_url }}"
+        curl -L -o "downloaded-apk.apk" "${{ steps.release_info.outputs.apk_download_url }}"
+        
+        # Verify download
+        if [ ! -f "downloaded-apk.apk" ]; then
+          echo "❌ Failed to download APK"
+          exit 1
+        fi
+        
+        echo "✅ APK downloaded successfully"
+        ls -lh downloaded-apk.apk
+
+    - name: Read version information for Xposed tag
+      id: version_info
+      run: |
+        # Read versionCode and versionName from gradle.properties
+        VERSION_CODE=$(grep "project.app.versionCode" gradle.properties | cut -d'=' -f2 | tr -d ' ')
+        VERSION_NAME=$(grep "project.app.versionName" gradle.properties | cut -d'=' -f2 | tr -d ' ')
+        
+        if [ -z "$VERSION_CODE" ] || [ -z "$VERSION_NAME" ]; then
+          echo "❌ Could not read version information from gradle.properties"
+          exit 1
+        fi
+        
+        XPOSED_TAG="${VERSION_CODE}-${VERSION_NAME}"
+        echo "✅ Xposed tag format: $XPOSED_TAG"
+        
+        echo "version_code=$VERSION_CODE" >> $GITHUB_OUTPUT
+        echo "version_name=$VERSION_NAME" >> $GITHUB_OUTPUT
+        echo "xposed_tag=$XPOSED_TAG" >> $GITHUB_OUTPUT
+
+    - name: Create release on Xposed-Modules-Repo
+      uses: ncipollo/release-action@v1
+      with:
+        # Use the Xposed tag format: versionCode-versionName
+        tag: ${{ steps.version_info.outputs.xposed_tag }}
+        name: Release ${{ steps.version_info.outputs.xposed_tag }}
+        # Use the same release body as the main repo
+        body: |
+          **Synced from main repo release: ${{ steps.release_info.outputs.tag_name }}**
+          
+          ${{ steps.release_info.outputs.release_body }}
+        # Upload the downloaded APK
+        artifacts: downloaded-apk.apk
+        # Target the Xposed repository
+        repo: Xposed-Modules-Repo/com.wizpizz.onepluspluslauncher
+        token: ${{ secrets.XPOSED_REPO_TOKEN }}
+        draft: false
+        prerelease: false
+        # Allow updating if release already exists
+        allowUpdates: true
+        
+    - name: Cleanup
+      run: |
+        # Clean up downloaded APK
+        rm -f downloaded-apk.apk
+        
+    - name: Summary
+      run: |
+        echo "## Sync Results" >> $GITHUB_STEP_SUMMARY
+        echo "✅ **Successfully synced release to Xposed repo**" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "**Main repo:** ${{ steps.release_info.outputs.tag_name }}" >> $GITHUB_STEP_SUMMARY
+        echo "**Xposed repo:** ${{ steps.version_info.outputs.xposed_tag }}" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "**APK:** ${{ steps.release_info.outputs.apk_name }}" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "[View Xposed Release](https://github.com/Xposed-Modules-Repo/com.wizpizz.onepluspluslauncher/releases/tag/${{ steps.version_info.outputs.xposed_tag }})" >> $GITHUB_STEP_SUMMARY 
