@@ -1,9 +1,7 @@
 package com.wizpizz.onepluspluslauncher.hook.features
 
-import android.content.Context
 import android.util.Log
 import com.highcapable.yukihookapi.hook.param.PackageParam
-import com.highcapable.yukihookapi.hook.factory.current
 import com.highcapable.yukihookapi.hook.factory.field
 import com.highcapable.yukihookapi.hook.factory.method
 import com.wizpizz.onepluspluslauncher.hook.features.HookUtils.LAUNCHER_CLASS
@@ -14,7 +12,7 @@ import com.wizpizz.onepluspluslauncher.hook.features.HookUtils.TAG
 /**
  * Auto-focuses search input when swiping up to enter All Apps state
  */
-object AutoFocusHook {
+object SwipeUpAutoFocusHook {
     
     fun apply(packageParam: PackageParam) {
         packageParam.apply {
