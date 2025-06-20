@@ -10,7 +10,8 @@
 
 OnePlusPlusLauncher is an Xposed/LSPosed module for the System Launcher on OxygenOS 15 that hooks into the application using the [YukiHookAPI](https://github.com/HighCapable/YuKiHookAPI) framework. It modifies app drawer search functions: automating keyboard display, enabling instant app launch from search, redirecting search actions to the app drawer, and providing optional fuzzy search.
 
-- tested on System Launcher 15.4.13, 15.6.13 / OxygenOS 15 (should theoretically work on ColorOS as well)
+- tested on System Launcher versions:
+  - 15.4.13, 15.6.13, 15.8.13
 
 **Please star the repository, if you enjoy using the module! It goes a long way ⭐**
 
