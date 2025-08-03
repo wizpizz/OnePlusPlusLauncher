@@ -13,6 +13,8 @@
     <string name="pref_enter_key_launch_title">Launch App on Enter</string>
     <string name="pref_global_search_redirect_title">Redirect Global Search Button</string>
     <string name="pref_swipe_down_search_redirect_title">Redirect Swipe Down Search</string>
+    <string name="pref_left_swipe_discover_redirect_title">Redirect Left Swipe (Google Discover)</string>
+    <string name="pref_auto_focus_left_swipe_redirect_title">Auto Focus on Left Swipe Redirect</string>
     <string name="feature_settings">Feature settings</string>
     <string name="category_search_enhancement">Search Enhancement</string>
     <string name="category_auto_focus">Auto Focus (Show Keyboard)</string>

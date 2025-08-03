@@ -329,6 +329,26 @@
             android:textColor="@color/colorTextGray"
             android:textSize="15sp" />
 
+        <com.wizpizz.onepluspluslauncher.ui.view.MaterialSwitch
+            android:id="@+id/left_swipe_discover_redirect_switch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/pref_left_swipe_discover_redirect_title"
+            android:textAllCaps="false"
+            android:textColor="@color/colorTextGray"
+            android:textSize="15sp" />
+
+        <com.wizpizz.onepluspluslauncher.ui.view.MaterialSwitch
+            android:id="@+id/auto_focus_left_swipe_redirect_switch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/pref_auto_focus_left_swipe_redirect_title"
+            android:textAllCaps="false"
+            android:textColor="@color/colorTextGray"
+            android:textSize="15sp" />
+
     </LinearLayout>
 
     <androidx.core.widget.NestedScrollView

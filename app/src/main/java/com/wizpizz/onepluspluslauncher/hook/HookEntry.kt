@@ -23,6 +23,7 @@ object HookEntry : IYukiHookXposedInit {
             FuzzySearchHook.apply(this)
             GlobalSearchRedirectHook.apply(this)
             SwipeDownSearchRedirectHook.apply(this)
+            LeftSwipeDiscoverRedirectHook.apply(this)
         }
     }
 }

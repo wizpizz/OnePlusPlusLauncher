@@ -23,6 +23,8 @@ object HookUtils {
     const val PREF_ENTER_KEY_LAUNCH = "enter_key_launch"
     const val PREF_GLOBAL_SEARCH_REDIRECT = "global_search_redirect"
     const val PREF_SWIPE_DOWN_SEARCH_REDIRECT = "swipe_down_search_redirect"
+    const val PREF_LEFT_SWIPE_DISCOVER_REDIRECT = "left_swipe_discover_redirect"
+    const val PREF_AUTO_FOCUS_LEFT_SWIPE_REDIRECT = "auto_focus_left_swipe_redirect"
     
     // Class names
     const val LAUNCHER_CLASS = "com.android.launcher3.Launcher"
