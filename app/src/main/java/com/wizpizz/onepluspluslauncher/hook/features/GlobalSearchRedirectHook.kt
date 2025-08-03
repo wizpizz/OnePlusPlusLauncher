@@ -15,16 +15,18 @@ import com.wizpizz.onepluspluslauncher.hook.features.HookUtils.TAG
  * Intercepts global search redirects to third-party apps (like QuickSearchBox)
  * and redirects them to the All Apps search instead.
  * Also provides optional auto-focus when redirecting.
+ * 
+ * Updated for System Launcher 15.8.17+ which uses IndicatorEntry instead of SearchEntry.
  */
 object GlobalSearchRedirectHook {
     
-    private const val SEARCH_ENTRY_CLASS = "com.android.launcher3.search.SearchEntry"
+    private const val INDICATOR_ENTRY_CLASS = "com.android.launcher3.search.IndicatorEntry"
     private const val QUICK_SEARCH_BOX_PACKAGE = "com.oppo.quicksearchbox"
     
     fun apply(packageParam: PackageParam) {
         packageParam.apply {
-            SEARCH_ENTRY_CLASS.toClassOrNull(appClassLoader)?.method {
-                name = "startSearchApp"
+            INDICATOR_ENTRY_CLASS.toClassOrNull(appClassLoader)?.method {
+                name = "startIndicatorApp"
                 param(IntentClass)
                 returnType = BooleanType
             }?.hook { 
@@ -54,13 +56,13 @@ object GlobalSearchRedirectHook {
                         }
                     }
                 }
-            } ?: Log.e(TAG, "[GlobalSearch] Failed to find SearchEntry.startSearchApp method")
+            } ?: Log.e(TAG, "[GlobalSearch] Failed to find IndicatorEntry.startIndicatorApp method")
         }
     }
     
-    private fun PackageParam.redirectToAllApps(searchEntryInstance: Any): Boolean {
+    private fun PackageParam.redirectToAllApps(indicatorEntryInstance: Any): Boolean {
         return try {
-            val launcherInstance = getLauncherFromSearchEntry(searchEntryInstance)
+            val launcherInstance = getLauncherFromIndicatorEntry(indicatorEntryInstance)
             if (launcherInstance == null) {
                 Log.e(TAG, "[GlobalSearch] Failed to get launcher instance")
                 return false
@@ -116,12 +118,12 @@ object GlobalSearchRedirectHook {
         }
     }
     
-    private fun getLauncherFromSearchEntry(searchEntryInstance: Any): Any? {
+    private fun getLauncherFromIndicatorEntry(indicatorEntryInstance: Any): Any? {
         return try {
-            searchEntryInstance.javaClass.field { 
+            indicatorEntryInstance.javaClass.field { 
                 name = "mLauncher"
                 superClass(true)
-            }.get(searchEntryInstance).any()
+            }.get(indicatorEntryInstance).any()
         } catch (e: Exception) {
             Log.e(TAG, "[GlobalSearch] Error getting mLauncher: ${e.message}")
             null

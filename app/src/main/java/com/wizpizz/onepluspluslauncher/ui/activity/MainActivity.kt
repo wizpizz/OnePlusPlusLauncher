@@ -33,7 +33,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         setupFeatureToggle(binding.globalSearchRedirectSwitch, PREF_GLOBAL_SEARCH_REDIRECT)
         setupFeatureToggle(binding.swipeDownSearchRedirectSwitch, PREF_SWIPE_DOWN_SEARCH_REDIRECT)
         setupFeatureToggle(binding.fuzzySearchSwitchNew, PREF_USE_FUZZY_SEARCH)
-        // Your code here.
     }
 
     /**
