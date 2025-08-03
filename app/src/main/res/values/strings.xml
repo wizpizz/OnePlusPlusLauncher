@@ -18,5 +18,5 @@
     <string name="feature_settings">Feature settings</string>
     <string name="category_search_enhancement">Search Enhancement</string>
     <string name="category_auto_focus">Auto Focus (Show Keyboard)</string>
-    <string name="category_search_redirect">Search Redirect</string>
+    <string name="category_search_redirect">Search Redirect (to app drawer)</string>
 </resources>
