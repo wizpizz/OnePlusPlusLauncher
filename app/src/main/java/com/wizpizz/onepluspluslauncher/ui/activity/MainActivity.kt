@@ -26,6 +26,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     override fun onCreate() {
         refreshModuleStatus()
         binding.mainTextVersion.text = getString(R.string.module_version, BuildConfig.VERSION_NAME)
+        binding.mainTextVersion2.text = getString(R.string.supported_launcher_version, BuildConfig.SUPPORTED_LAUNCHER_VERSION)
         
         // Setup feature toggles - all enabled by default
         setupFeatureToggle(binding.autoFocusSearchSwipeSwitch, PREF_AUTO_FOCUS_SEARCH_SWIPE)

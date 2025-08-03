@@ -96,18 +96,19 @@
                     android:textColor="@color/white"
                     android:textSize="13sp" />
 
-                <TextView
-                    android:id="@+id/main_text_release_version"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    android:alpha="0.8"
-                    android:ellipsize="end"
-                    android:singleLine="true"
-                    android:text="@string/module_version"
-                    android:textColor="@color/white"
-                    android:textSize="13sp" />
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/main_text_version2"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:alpha="0.8"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="@string/supported_launcher_version"
+                android:textColor="@color/white"
+                android:textSize="13sp" />
         </LinearLayout>
     </LinearLayout>
 
