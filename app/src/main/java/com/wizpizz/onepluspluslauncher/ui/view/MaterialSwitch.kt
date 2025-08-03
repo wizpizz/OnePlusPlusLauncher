@@ -47,7 +47,8 @@ class MaterialSwitch(context: Context, attrs: AttributeSet?) : SwitchCompat(cont
             thumbColor.toInt(),
             thumbColor.toInt()
         )
-        isSingleLine = true
-        ellipsize = TextUtils.TruncateAt.END
+        // Removed singleLine and ellipsize to allow text wrapping
+        // isSingleLine = true
+        // ellipsize = TextUtils.TruncateAt.END
     }
 }

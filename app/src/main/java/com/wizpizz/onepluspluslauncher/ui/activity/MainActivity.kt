@@ -83,9 +83,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
                 else -> R.string.module_not_activated
             }
         )
-        binding.mainTextApiWay.isVisible = YukiHookAPI.Status.isXposedModuleActive
-        binding.mainTextApiWay.text = if (YukiHookAPI.Status.Executor.apiLevel > 0)
-            "Activated by ${YukiHookAPI.Status.Executor.name} API ${YukiHookAPI.Status.Executor.apiLevel}"
-        else "Activated by ${YukiHookAPI.Status.Executor.name}"
+        // Removed mainTextApiWay references as the view no longer exists in the layout
     }
 }
