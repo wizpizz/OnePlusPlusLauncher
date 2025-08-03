@@ -134,35 +134,6 @@
                 android:layout_marginRight="15dp"
                 android:layout_marginBottom="10dp"
                 android:background="@drawable/bg_permotion_round"
-                android:gravity="center|start"
-                android:orientation="horizontal"
-                android:padding="10dp">
-
-                <ImageView
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:layout_marginEnd="10dp"
-                    android:src="@mipmap/ic_yukihookapi" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:autoLink="web"
-                    android:ellipsize="end"
-                    android:lineSpacingExtra="6dp"
-                    android:maxLines="2"
-                    android:text="@string/about_module"
-                    android:textColor="@color/colorTextGray"
-                    android:textSize="11sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:layout_marginBottom="10dp"
-                android:background="@drawable/bg_permotion_round"
                 android:orientation="vertical"
                 android:padding="15dp">
 
@@ -366,6 +337,35 @@
                     android:maxLines="3"
                     android:lineSpacingExtra="2dp" />
 
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/bg_permotion_round"
+                android:gravity="center|start"
+                android:orientation="horizontal"
+                android:padding="10dp">
+
+                <ImageView
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginEnd="10dp"
+                    android:src="@mipmap/ic_yukihookapi" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autoLink="web"
+                    android:ellipsize="end"
+                    android:lineSpacingExtra="6dp"
+                    android:maxLines="2"
+                    android:text="@string/about_module"
+                    android:textColor="@color/colorTextGray"
+                    android:textSize="11sp" />
             </LinearLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
