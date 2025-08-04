@@ -19,10 +19,12 @@ If you are using an older version of the launcher, please use an older release, 
 * Misc:
     * Several UI improvements.
 
+[Full Changelog](https://github.com/wizpizz/OnePlusPlusLauncher/compare/v1.1.0...v1.2.0)
+
 ## ⬇️ Installation
 
 1. Make sure your device is rooted and you have LSPosed installed.
-2. Download the latest release APK from the assets section below or simply [click here](https://github.com/Xposed-Modules-Repo/com.wizpizz.onepluspluslauncher/releases/download/v1.2.0/app-release.apk)
+2. Download the latest release APK from the assets section below or simply [click here](https://github.com/Xposed-Modules-Repo/com.wizpizz.onepluspluslauncher/releases/download/3-1.2.0/app-release.apk)
 3. Install the APK on your device.
 4. Enable the module in the LSPosed manager and make sure System Launcher is enabled in the scope settings.
 5. Restart System Launcher.

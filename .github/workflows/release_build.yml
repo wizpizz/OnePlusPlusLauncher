@@ -50,7 +50,7 @@ jobs:
         if-no-files-found: error
 
     # Optional: Upload to GitHub Release (if triggered by tag)
-    - name: Fetch tag annotation
+    - name: Fetch tag annotation and release notes
       if: startsWith(github.ref, 'refs/tags/')
       id: tag_data
       run: |
@@ -60,10 +60,23 @@ jobs:
         # Extract tag annotation message
         TAG_MESSAGE=$(git tag -l --format='%(contents)' ${{ github.ref_name }})
         
-        # Output the tag message for use in releases
+        # Also read the release.md file if it exists
+        if [ -f "docs/release.md" ]; then
+          RELEASE_NOTES=$(cat docs/release.md)
+        else
+          RELEASE_NOTES="$TAG_MESSAGE"
+        fi
+        
+        # Output both for use in releases
         {
           echo 'annotation<<EOF'
           echo "$TAG_MESSAGE"
+          echo 'EOF'
+        } >> $GITHUB_OUTPUT
+        
+        {
+          echo 'release_notes<<EOF'
+          echo "$RELEASE_NOTES"
           echo 'EOF'
         } >> $GITHUB_OUTPUT
 
@@ -75,9 +88,9 @@ jobs:
         # Use the tag name from the Git ref
         tag: ${{ github.ref_name }}
         # Use the tag name for the release name
-        name: Release ${{ github.ref_name }}
-        # Use the tag annotation message as the release body
-        body: ${{ steps.tag_data.outputs.annotation }}
+        name: v${{ github.ref_name }}
+        # Use the release.md content as the release body (preferred) or fallback to tag annotation
+        body: ${{ steps.tag_data.outputs.release_notes }}
         # Path to the artifact to upload
         artifacts: app/build/outputs/apk/release/app-release.apk
         # The action defaults to using github.token, which is fine with permissions set
@@ -109,13 +122,13 @@ jobs:
         cat > release_body.md << 'EOF'
         **Synced from main repo release: ${{ github.ref_name }}**
         
-        ${{ steps.tag_data.outputs.annotation }}
+        ${{ steps.tag_data.outputs.release_notes }}
         EOF
         
         # Create release using GitHub CLI
         gh release create "${{ steps.version_info.outputs.xposed_tag }}" \
           --repo "Xposed-Modules-Repo/com.wizpizz.onepluspluslauncher" \
-          --title "Release ${{ steps.version_info.outputs.xposed_tag }}" \
+          --title "v${{ github.ref_name }}" \
           --notes-file "release_body.md" \
           "app/build/outputs/apk/release/app-release.apk" || \
         # If release exists, upload to existing release
