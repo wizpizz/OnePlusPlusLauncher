@@ -67,7 +67,7 @@ jobs:
     - name: Download APK
       run: |
         echo "Downloading APK from: ${{ steps.release_info.outputs.apk_download_url }}"
-        curl -L -o "${{ steps.release_info.outputs.apk_name }}" "${{ steps.release_info.outputs.apk_download_url }}"
+        curl -L -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -o "${{ steps.release_info.outputs.apk_name }}" "${{ steps.release_info.outputs.apk_download_url }}"
         
         # Verify download
         if [ ! -f "${{ steps.release_info.outputs.apk_name }}" ]; then
@@ -112,7 +112,7 @@ jobs:
         # Create release using GitHub CLI
         gh release create "${{ steps.version_info.outputs.xposed_tag }}" \
           --repo "Xposed-Modules-Repo/com.wizpizz.onepluspluslauncher" \
-          --title "Release ${{ steps.version_info.outputs.xposed_tag }}" \
+          --title "v${{ steps.version_info.outputs.version_name }}" \
           --notes-file "release_body.md" \
           "${{ steps.release_info.outputs.apk_name }}" || \
         # If release exists, upload to existing release
