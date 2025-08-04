@@ -19,7 +19,7 @@ If you are using an older version of the launcher, please use an older release, 
 * Misc:
     * Several UI improvements.
 
-[Full Changelog: v1.1.0...v1.2.0](https://github.com/wizpizz/OnePlusPlusLauncher/compare/v1.1.0...v1.2.0)
+Full Changelog: [`v1.1.0...v1.2.0`](https://github.com/wizpizz/OnePlusPlusLauncher/compare/v1.1.0...v1.2.0)
 
 ## ⬇️ Installation
 
