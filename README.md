@@ -1,4 +1,11 @@
-# <center>OnePlusPlusLauncher</center>
+<div align="center">
+
+# OnePlusPlusLauncher
+
+## LSPosed Module for OnePlus System Launcher
+
+</div>
+
 ![GitHub Release](https://img.shields.io/github/v/release/wizpizz/OnePlusPlusLauncher?style=for-the-badge)
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/wizpizz/OnePlusPlusLauncher/debug_build.yml?style=for-the-badge&label=DEBUG%20BUILD)
 ![GitHub License](https://img.shields.io/github/license/wizpizz/OnePlusPlusLauncher?style=for-the-badge)
