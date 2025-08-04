@@ -61,8 +61,8 @@ jobs:
         TAG_MESSAGE=$(git tag -l --format='%(contents)' ${{ github.ref_name }})
         
         # Also read the release.md file if it exists
-        if [ -f "docs/release.md" ]; then
-          RELEASE_NOTES=$(cat docs/release.md)
+        if [ -f "notes/release.md" ]; then
+          RELEASE_NOTES=$(cat notes/release.md)
         else
           RELEASE_NOTES="$TAG_MESSAGE"
         fi
