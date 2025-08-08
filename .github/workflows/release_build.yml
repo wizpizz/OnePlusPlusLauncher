@@ -88,7 +88,7 @@ jobs:
         # Use the tag name from the Git ref
         tag: ${{ github.ref_name }}
         # Use the tag name for the release name
-        name: v${{ github.ref_name }}
+        name: ${{ github.ref_name }}
         # Use the release.md content as the release body (preferred) or fallback to tag annotation
         body: ${{ steps.tag_data.outputs.release_notes }}
         # Path to the artifact to upload
@@ -128,7 +128,7 @@ jobs:
         # Create release using GitHub CLI
         gh release create "${{ steps.version_info.outputs.xposed_tag }}" \
           --repo "Xposed-Modules-Repo/com.wizpizz.onepluspluslauncher" \
-          --title "v${{ github.ref_name }}" \
+          --title "${{ github.ref_name }}" \
           --notes-file "release_body.md" \
           "app/build/outputs/apk/release/app-release.apk" || \
         # If release exists, upload to existing release
