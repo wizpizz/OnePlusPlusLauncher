@@ -63,3 +63,6 @@ libraries:
   junit:
     junit:
       version: 4.13.2
+  me.xdrop:
+    fuzzywuzzy:
+      version: 1.4.0
