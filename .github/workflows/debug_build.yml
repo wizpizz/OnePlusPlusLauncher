@@ -3,8 +3,30 @@ name: Android Debug Build
 on:
   push:
     branches: [ "master" ] # Or your default branch
+    paths:
+      - 'app/**'
+      - '**/*.gradle'
+      - '**/*.gradle.kts'
+      - 'settings.gradle'
+      - 'settings.gradle.kts'
+      - 'gradle.properties'
+      - '**/gradle.properties'
+      - 'gradlew'
+      - 'gradlew.bat'
+      - 'gradle/**'
   pull_request:
     branches: [ "master" ] # Or your default branch
+    paths:
+      - 'app/**'
+      - '**/*.gradle'
+      - '**/*.gradle.kts'
+      - 'settings.gradle'
+      - 'settings.gradle.kts'
+      - 'gradle.properties'
+      - '**/gradle.properties'
+      - 'gradlew'
+      - 'gradlew.bat'
+      - 'gradle/**'
 
 jobs:
   build:
