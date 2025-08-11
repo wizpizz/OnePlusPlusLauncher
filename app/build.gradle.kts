@@ -15,7 +15,7 @@ android {
         versionName = property.project.app.versionName
         versionCode = property.project.app.versionCode
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        
+
         buildConfigField("String", "SUPPORTED_LAUNCHER_VERSION", "\"15.8.17\"")
     }
 
@@ -44,7 +44,10 @@ android {
         release {
             isMinifyEnabled = true
             isShrinkResources = true
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
             // Use the signing configuration
             signingConfig = signingConfigs.getByName("release")
         }
@@ -83,4 +86,5 @@ dependencies {
     testImplementation(junit.junit)
     androidTestImplementation(androidx.test.ext.junit)
     androidTestImplementation(androidx.test.espresso.espresso.core)
+    implementation(me.xdrop.fuzzywuzzy)
 }
