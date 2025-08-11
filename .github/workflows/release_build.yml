@@ -98,6 +98,8 @@ jobs:
         # Mark as a production release (not draft or prerelease)
         draft: false
         prerelease: false
+        allowUpdates: true
+        replacesArtifacts: true
 
     # Sync to Xposed-Modules-Repo (if triggered by tag)
     - name: Read version information
