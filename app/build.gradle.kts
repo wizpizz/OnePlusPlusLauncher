@@ -20,22 +20,37 @@ android {
     }
 
     signingConfigs {
-        create("release") {
-            // Read signing details from environment variables (populated by GitHub Secrets)
-            val keyStorePath = System.getenv("SIGNING_KEY_STORE_PATH")
-            val keyAlias = System.getenv("SIGNING_KEY_ALIAS")
-            val keyStorePassword = System.getenv("SIGNING_KEY_STORE_PASSWORD")
-            val keyPassword = System.getenv("SIGNING_KEY_PASSWORD")
+        // Read from environment first; if missing, read from a local .env file (ignored by Git)
+        val env = System.getenv()
+        val dotEnvFile = rootProject.file(".env")
+        val dotEnv: Map<String, String> = if (dotEnvFile.exists()) {
+            dotEnvFile.readLines()
+                .map { it.trim() }
+                .filter { it.isNotEmpty() && !it.startsWith("#") && it.contains('=') }
+                .associate { line ->
+                    val idx = line.indexOf('=')
+                    val key = line.substring(0, idx).trim()
+                    var value = line.substring(idx + 1).trim()
+                    if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith('\'') && value.endsWith('\''))) {
+                        value = value.substring(1, value.length - 1)
+                    }
+                    key to value
+                }
+        } else emptyMap()
 
-            if (keyStorePath != null && keyAlias != null && keyStorePassword != null && keyPassword != null) {
-                storeFile = file(keyStorePath)
-                storePassword = keyStorePassword
-                this.keyAlias = keyAlias
-                this.keyPassword = keyPassword
-            } else {
-                println("Release signing configuration not found. Using debug signing.")
-                // Fallback to debug signing if env vars are not set (e.g., local builds)
-                // Or handle this case as needed, e.g., throw an error
+        fun readSecret(name: String): String? = env[name] ?: dotEnv[name]
+
+        val ksPath = readSecret("SIGNING_KEY_STORE_PATH")
+        val ksAlias = readSecret("SIGNING_KEY_ALIAS")
+        val ksStorePassword = readSecret("SIGNING_KEY_STORE_PASSWORD")
+        val ksKeyPassword = readSecret("SIGNING_KEY_PASSWORD")
+
+        if (!ksPath.isNullOrEmpty() && !ksAlias.isNullOrEmpty() && !ksStorePassword.isNullOrEmpty() && !ksKeyPassword.isNullOrEmpty()) {
+            create("release") {
+                storeFile = (ksPath as Any?)?.let { file(it) }
+                storePassword = ksStorePassword
+                keyAlias = ksAlias
+                keyPassword = ksKeyPassword
             }
         }
     }
