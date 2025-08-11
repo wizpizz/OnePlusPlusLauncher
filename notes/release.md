@@ -1,30 +1,19 @@
-# 🚀 OnePlusPlusLauncher v1.2.0 Release 
-
-## ⚠️ Important
-
-**This version has only been tested on the latest launcher OxygenOS launcher version v15.8.17.**
-
-With all the backwards compatibility with older versions of the launcher, the code was becoming more and more unorganized. The next release will have a lot of refactoring and how older versions of the launcher are handled will be modularized. This was not included in this release due to time constraints, and wanting to get out this release with the fix for the latest version of the launcher.
-
-If you are using an older version of the launcher, please use an older release, or wait for the next release.
+# 🚀 OnePlusPlusLauncher v1.2.1 Release 
 
 ## 📝 Changelog
 
-* ✨ New feature(s):
-    * **Intercept/redirect Google Discover to app drawer**: When swiping left on the home screen, the app drawer will be opened and the search input will be focused (optional) instead of the Google Discover page.
-
-* 🔧 Fixes:
-    * Fixed the Global Search Button Redirect feature for the latest version of the launcher.
-
 * Misc:
-    * Several UI improvements.
+    * [[#4](https://github.com/wizpizz/OnePlusPlusLauncher/issues/4)] Fuzzy search now uses the lightweight [FuzzyWuzzy](https://github.com/seatgeek/fuzzywuzzy) library that utilizes the [Levenshtein Distance](https://en.wikipedia.org/wiki/Levenshtein_distance) algorithm to find the closest match. 
+    It handles simple typos well without any noticeable performance degredation.
+    The code has also been tweaked to sanitize spaces & quotation marks from the query, since users of non-English IMEs (e.g. Chinese Pinyin) often produce search queries with such characters. 
+    The calculation method has also been tweaked to prefer matches where the query is a prefix of the target or if the query chars subsequently appear in the target. (Thanks to **[@deltazefiro](https://github.com/deltazefiro)**!)
 
-Full Changelog: [`v1.1.0...v1.2.0`](https://github.com/wizpizz/OnePlusPlusLauncher/compare/v1.1.0...v1.2.0)
+Full Changelog: [`v1.2.0...v1.2.1`](https://github.com/wizpizz/OnePlusPlusLauncher/compare/v1.2.0...v1.2.1)
 
 ## ⬇️ Installation
 
 1. Make sure your device is rooted and you have LSPosed installed.
-2. Download the latest release APK from the assets section below or simply [click here](https://github.com/Xposed-Modules-Repo/com.wizpizz.onepluspluslauncher/releases/download/3-1.2.0/app-release.apk)
+2. Download the latest release APK from the assets section below or simply [click here](https://github.com/Xposed-Modules-Repo/com.wizpizz.onepluspluslauncher/releases/download/4-1.2.1/app-release.apk)
 3. Install the APK on your device.
 4. Enable the module in the LSPosed manager and make sure System Launcher is enabled in the scope settings.
 5. Restart System Launcher.
