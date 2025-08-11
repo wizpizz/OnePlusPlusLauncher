@@ -184,13 +184,6 @@ object FuzzySearchHook {
     private fun PackageParam.convertToAdapterItems(scoredResults: List<FuzzyMatchResult>): ArrayList<Any> {
         val sortedResults = scoredResults.sortedByDescending { it.score }
 
-        // if (sortedResults.isNotEmpty()) {
-        //     Log.d(TAG, "[FuzzySearch] Matched apps and scores:")
-        //     sortedResults.forEach { result ->
-        //         Log.d(TAG, "[FuzzySearch] ${result.appName} => ${result.score}")
-        //     }
-        // }
-
         val finalAdapterItems = ArrayList<Any>()
         val adapterItemClass = BASE_ADAPTER_ITEM_CLASS.toClass(appClassLoader)
         val appInfoClass = APP_INFO_CLASS.toClass(appClassLoader)
