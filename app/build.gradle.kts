@@ -45,12 +45,27 @@ android {
         val ksStorePassword = readSecret("SIGNING_KEY_STORE_PASSWORD")
         val ksKeyPassword = readSecret("SIGNING_KEY_PASSWORD")
 
-        if (!ksPath.isNullOrEmpty() && !ksAlias.isNullOrEmpty() && !ksStorePassword.isNullOrEmpty() && !ksKeyPassword.isNullOrEmpty()) {
-            create("release") {
+        create("release"){
+            if (!ksPath.isNullOrEmpty() && !ksAlias.isNullOrEmpty() && !ksStorePassword.isNullOrEmpty() && !ksKeyPassword.isNullOrEmpty()) {
                 storeFile = (ksPath as Any?)?.let { file(it) }
                 storePassword = ksStorePassword
                 keyAlias = ksAlias
                 keyPassword = ksKeyPassword
+            } else {
+                println(
+                    """
+                        
+                          _    _  _____ _____ _   _  _____      _____  ______ ____  _    _  _____      _  __________     __
+                         | |  | |/ ____|_   _| \ | |/ ____|    |  __ \|  ____|  _ \| |  | |/ ____|    | |/ /  ____\ \   / /
+                         | |  | | (___   | | |  \| | |  __     | |  | | |__  | |_) | |  | | |  __     | ' /| |__   \ \_/ / 
+                         | |  | |\___ \  | | | . ` | | |_ |    | |  | |  __| |  _ <| |  | | | |_ |    |  < |  __|   \   /  
+                         | |__| |____) |_| |_| |\  | |__| |    | |__| | |____| |_) | |__| | |__| |    | . \| |____   | |   
+                          \____/|_____/|_____|_| \_|\_____|    |_____/|______|____/ \____/ \_____|    |_|\_\______|  |_|   
+                                                                                                                           
+                                                                                                                           
+
+                    """.trimIndent()
+                )
             }
         }
     }
