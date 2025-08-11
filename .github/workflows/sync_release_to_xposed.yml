@@ -13,6 +13,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+    env:
+      XPOSED_REPO: Xposed-Modules-Repo/com.wizpizz.onepluspluslauncher
 
     steps:
     - name: Checkout code
@@ -121,13 +123,13 @@ jobs:
         
         # Create release using GitHub CLI
         gh release create "${{ steps.version_info.outputs.xposed_tag }}" \
-          --repo "Xposed-Modules-Repo/com.wizpizz.onepluspluslauncher" \
+          --repo "${{ env.XPOSED_REPO }}" \
           --title "v${{ steps.version_info.outputs.version_name }}" \
           --notes-file "release_body.md" \
           "${{ steps.release_info.outputs.apk_name }}" || \
         # If release exists, upload to existing release
         gh release upload "${{ steps.version_info.outputs.xposed_tag }}" \
-          --repo "Xposed-Modules-Repo/com.wizpizz.onepluspluslauncher" \
+          --repo "${{ env.XPOSED_REPO }}" \
           --clobber \
           "${{ steps.release_info.outputs.apk_name }}"
 
@@ -146,4 +148,4 @@ jobs:
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "**APK:** ${{ steps.release_info.outputs.apk_name }}" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
-        echo "[View Xposed Release](https://github.com/Xposed-Modules-Repo/com.wizpizz.onepluspluslauncher/releases/tag/${{ steps.version_info.outputs.xposed_tag }})" >> $GITHUB_STEP_SUMMARY 
+        echo "[View Xposed Release](https://github.com/${{ env.XPOSED_REPO }}/releases/tag/${{ steps.version_info.outputs.xposed_tag }})" >> $GITHUB_STEP_SUMMARY 

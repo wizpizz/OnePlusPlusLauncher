@@ -12,6 +12,8 @@ jobs:
     # Grant permissions for creating releases and uploading assets
     permissions:
       contents: write
+    env:
+      XPOSED_REPO: Xposed-Modules-Repo/com.wizpizz.onepluspluslauncher
 
     steps:
     - name: Checkout code
@@ -129,13 +131,13 @@ jobs:
         
         # Create release using GitHub CLI
         gh release create "${{ steps.version_info.outputs.xposed_tag }}" \
-          --repo "Xposed-Modules-Repo/com.wizpizz.onepluspluslauncher" \
+          --repo "${{ env.XPOSED_REPO }}" \
           --title "${{ github.ref_name }}" \
           --notes-file "release_body.md" \
           "app/build/outputs/apk/release/app-release.apk" || \
         # If release exists, upload to existing release
         gh release upload "${{ steps.version_info.outputs.xposed_tag }}" \
-          --repo "Xposed-Modules-Repo/com.wizpizz.onepluspluslauncher" \
+          --repo "${{ env.XPOSED_REPO }}" \
           --clobber \
           "app/build/outputs/apk/release/app-release.apk"
         
