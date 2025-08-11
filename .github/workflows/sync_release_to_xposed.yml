@@ -37,6 +37,7 @@ jobs:
         RELEASE_NAME=$(echo "$RELEASE_DATA" | jq -r '.name')
         RELEASE_BODY=$(echo "$RELEASE_DATA" | jq -r '.body')
         APK_DOWNLOAD_URL=$(echo "$RELEASE_DATA" | jq -r '.assets[] | select(.name | endswith(".apk")) | .browser_download_url')
+        APK_ID=$(echo "$RELEASE_DATA" | jq -r '.assets[] | select(.name | endswith(".apk")) | .id')
         APK_NAME=$(echo "$RELEASE_DATA" | jq -r '.assets[] | select(.name | endswith(".apk")) | .name')
         
         # Validate we got the data
@@ -49,6 +50,10 @@ jobs:
           echo "❌ Could not find APK asset in release."
           exit 1
         fi
+        if [ "$APK_ID" = "null" ] || [ -z "$APK_ID" ]; then
+          echo "❌ Could not find APK asset ID in release."
+          exit 1
+        fi
         
         echo "✅ Found release: $TAG_NAME"
         echo "✅ APK URL: $APK_DOWNLOAD_URL"
@@ -58,38 +63,43 @@ jobs:
           echo "tag_name=$TAG_NAME"
           echo "release_name=$RELEASE_NAME"
           echo "apk_download_url=$APK_DOWNLOAD_URL"
+          echo "apk_id=$APK_ID"
           echo "apk_name=$APK_NAME"
           echo 'release_body<<EOF'
           echo "$RELEASE_BODY"
           echo 'EOF'
         } >> $GITHUB_OUTPUT
 
-    - name: Download APK
+    - name: Download APK (private asset-safe)
       run: |
-        echo "Downloading APK from: ${{ steps.release_info.outputs.apk_download_url }}"
-        curl -L -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -o "${{ steps.release_info.outputs.apk_name }}" "${{ steps.release_info.outputs.apk_download_url }}"
-        
+        echo "Downloading APK via GitHub API asset endpoint (ID: ${{ steps.release_info.outputs.apk_id }})"
+        curl -L \
+          -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          -H "Accept: application/octet-stream" \
+          -o "${{ steps.release_info.outputs.apk_name }}" \
+          "https://api.github.com/repos/${{ github.repository }}/releases/assets/${{ steps.release_info.outputs.apk_id }}"
+
         # Verify download
         if [ ! -f "${{ steps.release_info.outputs.apk_name }}" ]; then
           echo "❌ Failed to download APK"
           exit 1
         fi
-        
+
         echo "✅ APK downloaded successfully as: ${{ steps.release_info.outputs.apk_name }}"
         ls -lh "${{ steps.release_info.outputs.apk_name }}"
 
     - name: Read version information for Xposed tag
       id: version_info
       run: |
-        # Read versionCode and versionName from gradle.properties
-        VERSION_CODE=$(grep "project.app.versionCode" gradle.properties | cut -d'=' -f2 | tr -d ' ')
-        VERSION_NAME=$(grep "project.app.versionName" gradle.properties | cut -d'=' -f2 | tr -d ' ')
-        
+        # Read versionCode and versionName from app/build.gradle.kts
+        VERSION_CODE=$(sed -n 's/^[[:space:]]*versionCode[[:space:]]*=[[:space:]]*\([0-9]\+\).*/\1/p' app/build.gradle.kts | head -n1)
+        VERSION_NAME=$(sed -n 's/^[[:space:]]*versionName[[:space:]]*=[[:space:]]*"\(.*\)".*/\1/p' app/build.gradle.kts | head -n1)
+
         if [ -z "$VERSION_CODE" ] || [ -z "$VERSION_NAME" ]; then
-          echo "❌ Could not read version information from gradle.properties"
+          echo "❌ Could not read version information from app/build.gradle.kts"
           exit 1
         fi
-        
+
         XPOSED_TAG="${VERSION_CODE}-${VERSION_NAME}"
         echo "✅ Xposed tag format: $XPOSED_TAG"
         
