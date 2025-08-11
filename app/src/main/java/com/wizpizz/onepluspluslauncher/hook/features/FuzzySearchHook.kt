@@ -20,10 +20,7 @@ object FuzzySearchHook {
     private const val APP_INFO_CLASS = "com.android.launcher3.model.data.AppInfo"
     private const val ARRAY_LIST_CLASS = "java.util.ArrayList"
 
-    // FuzzyWuzzy score cutoff to filter weak matches
-    private const val FUZZY_SCORE_CUTOFF = 50
-
-    // Multipliers for different match strengths
+    private const val MATCH_THRESHOLD = 50
     private const val PREFIX_MATCH_MULTIPLIER = 1.5
     private const val SUBSTRING_MATCH_MULTIPLIER = 1.3
     private const val SUBSEQUENCE_MATCH_MULTIPLIER = 1.1
@@ -41,12 +38,10 @@ object FuzzySearchHook {
 
                     // Read preference - default to true for better search experience
                     val useFuzzySearch = prefs.getBoolean(PREF_USE_FUZZY_SEARCH, true)
-
                     if (!useFuzzySearch) return@before
 
                     // IME delimiters: strip spaces and single quotes from the query
                     val sanitizedQuery = sanitizeSearchQuery(rawQuery)
-
                     if (sanitizedQuery.isBlank()) return@before
 
                     try {
@@ -141,7 +136,7 @@ object FuzzySearchHook {
 
                 val score = calculateMatchScore(appNameLower, queryLower)
 
-                if (score >= FUZZY_SCORE_CUTOFF) {
+                if (score >= MATCH_THRESHOLD) {
                     appInfo?.let { FuzzyMatchResult(it, score, appName) }
                         ?.let { scoredResults.add(it) }
                 }
@@ -187,12 +182,7 @@ object FuzzySearchHook {
     }
 
     private fun PackageParam.convertToAdapterItems(scoredResults: List<FuzzyMatchResult>): ArrayList<Any> {
-        // Sort by score (descending), then alphabetically (ascending)
-        val sortedResults = scoredResults.sortedWith { o1, o2 ->
-            val scoreCompare = o2.score.compareTo(o1.score)
-            if (scoreCompare != 0) scoreCompare
-            else o1.appName.compareTo(o2.appName, ignoreCase = true)
-        }
+        val sortedResults = scoredResults.sortedByDescending { it.score }
 
         // if (sortedResults.isNotEmpty()) {
         //     Log.d(TAG, "[FuzzySearch] Matched apps and scores:")
