@@ -23,7 +23,6 @@ output.json
 
 # IntelliJ
 *.iml
-.idea/
 misc.xml
 deploymentTargetDropDown.xml
 render.experimental.xml
@@ -47,8 +46,9 @@ google-services.json
 .idea/**/workspace.xml
 .idea/**/tasks.xml
 .idea/**/usage.statistics.xml
-.idea/**/dictionaries
 .idea/**/shelf
+.idea/**/caches/
+.idea/**/deploymentTargetSelector.xml
 
 # AWS User-specific
 .idea/**/aws.xml
