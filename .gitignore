@@ -47,8 +47,10 @@ google-services.json
 .idea/**/tasks.xml
 .idea/**/usage.statistics.xml
 .idea/**/shelf
+# Idea changes from me 
 .idea/**/caches/
 .idea/**/deploymentTargetSelector.xml
+.idea/**/modules.xml
 
 # AWS User-specific
 .idea/**/aws.xml
