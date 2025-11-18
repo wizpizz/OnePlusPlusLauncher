@@ -1,6 +1,7 @@
 # Added by wizpizz
 keystore/
 .kotlin/
+decompiled/
 
 # Android-specific: https://github.com/github/gitignore/blob/main/Android.gitignore
 
