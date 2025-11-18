@@ -52,6 +52,8 @@ google-services.json
 .idea/**/caches/
 .idea/**/deploymentTargetSelector.xml
 .idea/**/modules.xml
+.idea/copilot*
+.idea/compiler.xml
 
 # AWS User-specific
 .idea/**/aws.xml
